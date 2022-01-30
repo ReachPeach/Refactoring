@@ -1,4 +1,4 @@
-package ru.akirakozov.sd.refactoring.servlet;
+package ru.akirakozov.sd.refactoring.servlet.query;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.sql.Statement;
  */
 public class QueryServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String command = request.getParameter("command");
 
         if ("max".equals(command)) {
@@ -26,8 +26,8 @@ public class QueryServlet extends HttpServlet {
                     response.getWriter().println("<h1>Product with max price: </h1>");
 
                     while (rs.next()) {
-                        String  name = rs.getString("name");
-                        int price  = rs.getInt("price");
+                        String name = rs.getString("name");
+                        int price = rs.getInt("price");
                         response.getWriter().println(name + "\t" + price + "</br>");
                     }
                     response.getWriter().println("</body></html>");
@@ -48,8 +48,8 @@ public class QueryServlet extends HttpServlet {
                     response.getWriter().println("<h1>Product with min price: </h1>");
 
                     while (rs.next()) {
-                        String  name = rs.getString("name");
-                        int price  = rs.getInt("price");
+                        String name = rs.getString("name");
+                        int price = rs.getInt("price");
                         response.getWriter().println(name + "\t" + price + "</br>");
                     }
                     response.getWriter().println("</body></html>");
