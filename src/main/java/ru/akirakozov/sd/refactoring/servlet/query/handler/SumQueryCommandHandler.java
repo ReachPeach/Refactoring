@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet.query.handler;
 
-import javax.servlet.http.HttpServletResponse;
+import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,9 +18,9 @@ public class SumQueryCommandHandler implements QueryCommandHandler {
     }
 
     @Override
-    public void handleOutput(ResultSet rs, HttpServletResponse response) throws IOException, SQLException {
+    public void handleOutput(ResultSet rs, ResponseBuilder responseBuilder) throws SQLException {
         if (rs.next()) {
-            response.getWriter().println(rs.getInt(1));
+            responseBuilder.addLine(String.valueOf(rs.getInt(1)));
         }
     }
 }

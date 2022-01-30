@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet.query;
 
 import ru.akirakozov.sd.refactoring.database.DatabaseQueriesExecutor;
+import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
 import ru.akirakozov.sd.refactoring.servlet.query.handler.*;
 
 import javax.servlet.http.HttpServlet;
@@ -20,49 +21,47 @@ public class QueryServlet extends HttpServlet {
         this.dataBaseUrl = dataBaseUrl;
     }
 
-    private void executeCommand(QueryCommandHandler commandExecute, HttpServletResponse response) throws IOException {
+    private void executeCommand(QueryCommandHandler commandExecute, ResponseBuilder responseBuilder) throws IOException {
         try (DatabaseQueriesExecutor sqlExecutor = new DatabaseQueriesExecutor(dataBaseUrl)) {
             ResultSet rs = sqlExecutor.executeQuery(commandExecute.getSqlResponse());
-            response.getWriter().println("<html><body>");
-            response.getWriter().println(commandExecute.getQueryResultTitle());
+            responseBuilder.addLine(commandExecute.getQueryResultTitle());
 
-            commandExecute.handleOutput(rs, response);
-            response.getWriter().println("</body></html>");
+            commandExecute.handleOutput(rs, responseBuilder);
 
             rs.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        responseBuilder.buildHtml();
     }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String command = request.getParameter("command");
 
+        ResponseBuilder responseBuilder = new ResponseBuilder(response);
+
         switch (command) {
             case "max": {
-                executeCommand(new MaxQueryCommandHandler(), response);
+                executeCommand(new MaxQueryCommandHandler(), responseBuilder);
                 break;
             }
             case "min": {
-                executeCommand(new MinQueryCommandHandler(), response);
+                executeCommand(new MinQueryCommandHandler(), responseBuilder);
                 break;
             }
             case "sum": {
-                executeCommand(new SumQueryCommandHandler(), response);
+                executeCommand(new SumQueryCommandHandler(), responseBuilder);
                 break;
             }
             case "count": {
-                executeCommand(new CountQueryCommandHandler(), response);
+                executeCommand(new CountQueryCommandHandler(), responseBuilder);
                 break;
             }
             default: {
-                response.getWriter().println("Unknown command: " + command);
+                responseBuilder.addLine("Unknown command: " + command);
+                responseBuilder.buildText();
             }
         }
-
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
-
 }

@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet.query.handler;
 
-import javax.servlet.http.HttpServletResponse;
+import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,11 +18,11 @@ public class MinQueryCommandHandler implements QueryCommandHandler {
     }
 
     @Override
-    public void handleOutput(ResultSet rs, HttpServletResponse response) throws IOException, SQLException {
+    public void handleOutput(ResultSet rs, ResponseBuilder responseBuilder) throws SQLException {
         while (rs.next()) {
             String name = rs.getString("name");
             int price = rs.getInt("price");
-            response.getWriter().println(name + "\t" + price + "</br>");
+            responseBuilder.addLineBreak(name + "\t" + price);
         }
     }
 }

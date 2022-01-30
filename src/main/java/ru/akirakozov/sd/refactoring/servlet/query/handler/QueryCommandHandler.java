@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet.query.handler;
 
-import javax.servlet.http.HttpServletResponse;
+import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,5 +11,5 @@ public interface QueryCommandHandler {
 
     String getQueryResultTitle();
 
-    void handleOutput(ResultSet rs, HttpServletResponse response) throws IOException, SQLException;
+    void handleOutput(ResultSet rs, ResponseBuilder responseBuilder) throws IOException, SQLException;
 }
