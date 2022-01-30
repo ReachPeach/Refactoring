@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class QueryServletTest extends ServletTest {
-    private final QueryServlet queryServlet = new QueryServlet();
+    private final QueryServlet queryServlet = new QueryServlet(dataBaseUrl);
 
     @Before
     public void setup() throws IOException, SQLException {

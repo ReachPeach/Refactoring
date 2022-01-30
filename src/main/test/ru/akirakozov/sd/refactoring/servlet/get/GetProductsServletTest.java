@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
 public class GetProductsServletTest extends ServletTest {
-    private final GetProductsServlet getProductServlet = new GetProductsServlet();
+    private final GetProductsServlet getProductServlet = new GetProductsServlet(dataBaseUrl);
 
     @Test
     public void getFromEmptyDatabase() {

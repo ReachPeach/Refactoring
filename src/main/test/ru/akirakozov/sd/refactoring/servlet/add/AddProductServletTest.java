@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class AddProductServletTest extends ServletTest {
-    private final AddProductServlet addProductServlet = new AddProductServlet();
+    private final AddProductServlet addProductServlet = new AddProductServlet(dataBaseUrl);
 
     @Test
     public void addInEmptyDatabase() throws SQLException {

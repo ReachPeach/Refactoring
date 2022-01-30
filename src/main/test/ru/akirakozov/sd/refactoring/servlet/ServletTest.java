@@ -16,6 +16,8 @@ public abstract class ServletTest {
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected StringBuilder htmlResponse;
+    protected final String dataBaseUrl = "jdbc:sqlite:test.db";
+
 
     @Before
     public void setup() throws SQLException, IOException {

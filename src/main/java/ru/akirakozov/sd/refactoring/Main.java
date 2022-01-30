@@ -15,6 +15,8 @@ import java.sql.Statement;
  * @author akirakozov
  */
 public class Main {
+    private static final String usedDatabase = "jdbc:sqlite:test.db";
+
     public static void main(String[] args) throws Exception {
         try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {
             String sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
@@ -33,9 +35,9 @@ public class Main {
         context.setContextPath("/");
         server.setHandler(context);
 
-        context.addServlet(new ServletHolder(new AddProductServlet()), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet()),"/get-products");
-        context.addServlet(new ServletHolder(new QueryServlet()),"/query");
+        context.addServlet(new ServletHolder(new AddProductServlet(usedDatabase)), "/add-product");
+        context.addServlet(new ServletHolder(new GetProductsServlet(usedDatabase)), "/get-products");
+        context.addServlet(new ServletHolder(new QueryServlet(usedDatabase)), "/query");
 
         server.start();
         server.join();
