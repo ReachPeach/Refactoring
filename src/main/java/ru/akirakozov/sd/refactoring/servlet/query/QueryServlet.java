@@ -2,7 +2,9 @@ package ru.akirakozov.sd.refactoring.servlet.query;
 
 import ru.akirakozov.sd.refactoring.database.DatabaseQueriesExecutor;
 import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
-import ru.akirakozov.sd.refactoring.servlet.query.handler.*;
+import ru.akirakozov.sd.refactoring.servlet.query.handler.QueryCommandHandler;
+import ru.akirakozov.sd.refactoring.servlet.query.handler.QueryCommandHandlerFactory;
+import ru.akirakozov.sd.refactoring.servlet.query.handler.UnknownQueryCommandHandler;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +23,12 @@ public class QueryServlet extends HttpServlet {
         this.dataBaseUrl = dataBaseUrl;
     }
 
-    private void executeCommand(QueryCommandHandler commandExecute, ResponseBuilder responseBuilder) throws IOException {
+    private void executeCommand(QueryCommandHandler commandHandler, ResponseBuilder responseBuilder) throws IOException {
         try (DatabaseQueriesExecutor sqlExecutor = new DatabaseQueriesExecutor(dataBaseUrl)) {
-            ResultSet rs = sqlExecutor.executeQuery(commandExecute.getSqlResponse());
-            responseBuilder.addLine(commandExecute.getQueryResultTitle());
+            ResultSet rs = sqlExecutor.executeQuery(commandHandler.getSqlResponse());
+            responseBuilder.addLine(commandHandler.getQueryResultTitle());
 
-            commandExecute.handleOutput(rs, responseBuilder);
+            commandHandler.handleOutput(rs, responseBuilder);
 
             rs.close();
         } catch (SQLException e) {
@@ -41,27 +43,13 @@ public class QueryServlet extends HttpServlet {
 
         ResponseBuilder responseBuilder = new ResponseBuilder(response);
 
-        switch (command) {
-            case "max": {
-                executeCommand(new MaxQueryCommandHandler(), responseBuilder);
-                break;
-            }
-            case "min": {
-                executeCommand(new MinQueryCommandHandler(), responseBuilder);
-                break;
-            }
-            case "sum": {
-                executeCommand(new SumQueryCommandHandler(), responseBuilder);
-                break;
-            }
-            case "count": {
-                executeCommand(new CountQueryCommandHandler(), responseBuilder);
-                break;
-            }
-            default: {
-                responseBuilder.addLine("Unknown command: " + command);
-                responseBuilder.buildText();
-            }
+        QueryCommandHandler commandHandler = QueryCommandHandlerFactory.getQueryCommandHandlerByName(command);
+
+        if (commandHandler instanceof UnknownQueryCommandHandler) {
+            responseBuilder.addLine("Unknown command: " + command);
+            responseBuilder.buildText();
+        } else {
+            executeCommand(commandHandler, responseBuilder);
         }
     }
 }
