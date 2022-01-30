@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 
 public class UnknownQueryCommandHandler implements QueryCommandHandler {
     @Override
-    public String getSqlResponse() {
+    public String getSqlQuery() {
         return null;
     }
 

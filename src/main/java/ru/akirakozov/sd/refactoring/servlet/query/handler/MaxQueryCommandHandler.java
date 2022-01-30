@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class MaxQueryCommandHandler implements QueryCommandHandler {
 
     @Override
-    public String getSqlResponse() {
+    public String getSqlQuery() {
         return "SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1";
     }
 

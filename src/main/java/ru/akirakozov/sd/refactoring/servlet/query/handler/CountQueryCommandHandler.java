@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class CountQueryCommandHandler implements QueryCommandHandler {
     @Override
-    public String getSqlResponse() {
+    public String getSqlQuery() {
         return "SELECT COUNT(*) FROM PRODUCT";
     }
 

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class MinQueryCommandHandler implements QueryCommandHandler {
     @Override
-    public String getSqlResponse() {
+    public String getSqlQuery() {
         return "SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1";
     }
 

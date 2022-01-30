@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static ru.akirakozov.sd.refactoring.servlet.util.ServletSqlExecutor.executeQuery;
 
@@ -33,7 +31,7 @@ public class QueryServlet extends HttpServlet {
             responseBuilder.buildHtml();
         };
 
-        executeQuery(dataBaseUrl, commandHandler.getSqlResponse(), action);
+        executeQuery(dataBaseUrl, commandHandler.getSqlQuery(), action);
     }
 
     @Override

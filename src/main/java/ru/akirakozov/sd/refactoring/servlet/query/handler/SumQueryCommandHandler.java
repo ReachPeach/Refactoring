@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class SumQueryCommandHandler implements QueryCommandHandler {
     @Override
-    public String getSqlResponse() {
+    public String getSqlQuery() {
         return "SELECT SUM(price) FROM PRODUCT";
     }
 
