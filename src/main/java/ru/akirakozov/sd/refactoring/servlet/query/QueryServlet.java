@@ -1,12 +1,14 @@
 package ru.akirakozov.sd.refactoring.servlet.query;
 
+import ru.akirakozov.sd.refactoring.database.DatabaseQueriesExecutor;
 import ru.akirakozov.sd.refactoring.servlet.query.handler.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @author akirakozov
@@ -19,9 +21,8 @@ public class QueryServlet extends HttpServlet {
     }
 
     private void executeCommand(QueryCommandHandler commandExecute, HttpServletResponse response) throws IOException {
-        try (Connection c = DriverManager.getConnection(dataBaseUrl)) {
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery(commandExecute.getSqlResponse());
+        try (DatabaseQueriesExecutor sqlExecutor = new DatabaseQueriesExecutor(dataBaseUrl)) {
+            ResultSet rs = sqlExecutor.executeQuery(commandExecute.getSqlResponse());
             response.getWriter().println("<html><body>");
             response.getWriter().println(commandExecute.getQueryResultTitle());
 
@@ -29,7 +30,6 @@ public class QueryServlet extends HttpServlet {
             response.getWriter().println("</body></html>");
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
