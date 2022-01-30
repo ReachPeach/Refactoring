@@ -14,7 +14,7 @@ public class MaxQueryCommandHandler implements QueryCommandHandler {
 
     @Override
     public String getQueryResultTitle() {
-        return "<h1>Product with max price: <h1>";
+        return "<h1>Product with max price: </h1>";
     }
 
     @Override

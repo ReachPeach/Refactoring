@@ -13,7 +13,7 @@ public class MinQueryCommandHandler implements QueryCommandHandler {
 
     @Override
     public String getQueryResultTitle() {
-        return "<h1>Product with min price: <h1>";
+        return "<h1>Product with min price: </h1>";
     }
 
     @Override
