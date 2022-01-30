@@ -1,10 +1,10 @@
 package ru.akirakozov.sd.refactoring.servlet.query;
 
-import ru.akirakozov.sd.refactoring.database.DatabaseQueriesExecutor;
 import ru.akirakozov.sd.refactoring.html.ResponseBuilder;
 import ru.akirakozov.sd.refactoring.servlet.query.handler.QueryCommandHandler;
 import ru.akirakozov.sd.refactoring.servlet.query.handler.QueryCommandHandlerFactory;
 import ru.akirakozov.sd.refactoring.servlet.query.handler.UnknownQueryCommandHandler;
+import ru.akirakozov.sd.refactoring.servlet.util.ServletSqlExecutor;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import static ru.akirakozov.sd.refactoring.servlet.util.ServletSqlExecutor.executeQuery;
 
 /**
  * @author akirakozov
@@ -23,18 +25,15 @@ public class QueryServlet extends HttpServlet {
         this.dataBaseUrl = dataBaseUrl;
     }
 
-    private void executeCommand(QueryCommandHandler commandHandler, ResponseBuilder responseBuilder) throws IOException {
-        try (DatabaseQueriesExecutor sqlExecutor = new DatabaseQueriesExecutor(dataBaseUrl)) {
-            ResultSet rs = sqlExecutor.executeQuery(commandHandler.getSqlResponse());
+    private void executeCommand(QueryCommandHandler commandHandler, ResponseBuilder responseBuilder) {
+
+        ServletSqlExecutor.OnExecuteAction action = rs -> {
             responseBuilder.addLine(commandHandler.getQueryResultTitle());
-
             commandHandler.handleOutput(rs, responseBuilder);
+            responseBuilder.buildHtml();
+        };
 
-            rs.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        responseBuilder.buildHtml();
+        executeQuery(dataBaseUrl, commandHandler.getSqlResponse(), action);
     }
 
     @Override
